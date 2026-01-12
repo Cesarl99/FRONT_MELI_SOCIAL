@@ -24,7 +24,7 @@ function TopMenu() {
     // Aqui você pode depois chamar o backend para buscar o nome pelo ID
     const usuario = {
       id: Number(idDigitado),
-      nome: `Usuario${idDigitado}`, // provisório, até buscar do backend
+      nome: `Usuario${idDigitado}`,  // provisório, até buscar do backend
     };
 
     localStorage.setItem("usuarioLogado", JSON.stringify(usuario));

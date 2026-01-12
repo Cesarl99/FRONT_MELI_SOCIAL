@@ -33,8 +33,18 @@ function SeguirVendedor() {
 
       navigate("/");
     } catch (error) {
-      console.error("Erro ao seguir usuário:", error);
-      setErro("Erro ao seguir usuário. Veja o console para detalhes.");
+    
+      if (error.response) {
+          console.error("Status:", error.response.status);
+          console.error("Dados:", error.response.data);
+          console.error("Headers:", error.response.headers);
+          const mensagemBackend =
+              typeof error.response.data === "string"
+              ? error.response.data
+              : error.response.data?.message || "Erro ao deixar de seguir usuário.";
+
+          setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
+      }
     }
   }
 
@@ -60,7 +70,7 @@ function SeguirVendedor() {
         </label>
       </div>
 
-      <button onClick={handleSalvar}>Seguir</button>
+      <button onClick={handleSalvar}>Salvar</button>
 
       {erro && <p style={{ color: "red" }}>{erro}</p>}
     </div>
