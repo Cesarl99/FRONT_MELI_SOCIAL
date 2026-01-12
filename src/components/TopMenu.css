@@ -1,0 +1,65 @@
+
+.top-header {
+    background-color: #ffe600;
+    padding: 14px 24px;
+    font-family: Arial, sans-serif;
+    /* posição: */
+    position: fixed;  /* prende no topo da página */
+    top: 0px;           /* distância do topo */
+    left: 0;          /* distância da esquerda */
+    right: 0;         /* ocupa até a direita */
+
+    display: flex;               /* distribui os filhos em linha */
+    align-items: center;         /* alinha verticalmente */
+    justify-content: space-between; /* um bloco à esquerda, outro à direita */
+}
+
+.top-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 16px;            /* espaço entre os itens */
+    align-items: center;
+    left: 0;
+    right: 0;
+}
+
+.top-menu-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Itens do menu */
+.top-menu-list li {
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.top-menu-list li:hover {
+  text-decoration: underline;
+}
+
+.bem-vindo-wrapper {
+  font-size: 14px;
+  color: #333;
+}
+
+.meli-icon {
+  font-size: 18px;    /* tamanho do ícone */
+  color: #333;        /* cor do ícone */
+  transform: translateY(3px); /* desce 3px */
+}
+
+.logo-mercado-livre {
+  height: 36px;          /* tamanho */
+  transform: translateY(-4px);  /* “coordenada” Y, desce 3px */
+  /* ou margin-top: 3px; */
+}
+
+.logo-mercado-pago {
+  height: 43px;
+  margin-left: 16px;     /* afasta da outra imagem */
+}
