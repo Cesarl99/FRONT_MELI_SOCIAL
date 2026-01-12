@@ -15,24 +15,24 @@ function DeixarDeSeguir() {
 
     async function handleDeixarDeSeguir() {
         try {
-        setErro(null);
+            setErro(null);
 
-        if (!usuarioLogado) {
-            setErro("Você precisa informar o ID do usuário logado no topo da tela.");
-            return;
-        }
+            if (!usuarioLogado) {
+                setErro("Você precisa informar o ID do usuário logado no topo da tela.");
+                return;
+            }
 
-        if (!idUsuarioDeixardeSeguir) {
-            setErro("Informe o ID do usuário que você quer deixar de seguir.");
-            return;
-        }
+            if (!idUsuarioDeixardeSeguir) {
+                setErro("Informe o ID do usuário que você quer deixar de seguir.");
+                return;
+            }
 
-        const idUsuarioLogado = usuarioLogado.id;
+            const idUsuarioLogado = usuarioLogado.id;
 
-        const url = `http://localhost:8080/users/${idUsuarioLogado}/unfollow/${idUsuarioDeixardeSeguir}`;
-        await axios.post(url);
+            const url = `http://localhost:8080/users/${idUsuarioLogado}/unfollow/${idUsuarioDeixardeSeguir}`;
+            await axios.post(url);
 
-        navigate("/");
+            navigate("/");
         } catch (error) {
             // se o backend respondeu (status 4xx ou 5xx)
             if (error.response) {

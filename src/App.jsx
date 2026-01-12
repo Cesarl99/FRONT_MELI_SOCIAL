@@ -8,6 +8,7 @@ import DeixarDeSeguir from "./pages/DeixarDeSeguir";
 import NovaPublicacao from "./pages/NovaPublicacao";
 import Publicacoes from "./pages/Publicacoes";
 import ProdutosPromocao from "./pages/ProdutosPromocao";
+import QuantidadeSeguidoresVendedor from "./pages/QuantidadeSeguidoresVendedores";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 
@@ -20,6 +21,7 @@ function App() {
       <main style={{ padding: "20px" }}>
         <Routes>
           <Route path="/seguir-vendedor" element={<SeguirVendedor />} />
+          <Route path="/quantidade-seguidores-vendedor" element={<QuantidadeSeguidoresVendedor />} />
           <Route path="/quem-me-segue" element={<QuemMeSegue />} />
           <Route path="/quem-estou-seguindo" element={<QuemEstouSeguindo />} />
           <Route path="/deixar-de-seguir" element={<DeixarDeSeguir />} />

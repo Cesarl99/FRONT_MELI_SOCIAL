@@ -41,6 +41,7 @@ function TopMenu() {
     <header className="top-header">
       <ul className="top-menu-list">
         <li><Link to="/seguir-vendedor">Seguir Vendedor</Link></li>
+        <li><Link to="/quantidade-seguidores-vendedor">Quantidade Seguidor Vendedor</Link></li>
         <li><Link to="/quem-me-segue">Quem Me Segue?</Link></li>
         <li><Link to="/quem-estou-seguindo">Quem Estou Seguindo?</Link></li>
         <li><Link to="/deixar-de-seguir">Deixar de Seguir</Link></li>
