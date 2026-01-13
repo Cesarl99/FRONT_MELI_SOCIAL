@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-let i = 1;
 function NovaPublicacao() {
   const navigate = useNavigate();
 
@@ -19,11 +18,13 @@ function NovaPublicacao() {
   const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(null);
 
+  let response;
+
   const dadosUsuario = localStorage.getItem("usuarioLogado");
   const usuarioLogado = dadosUsuario ? JSON.parse(dadosUsuario) : null;
 
   async function handleCriarPublicacao(e) {
-    e.preventDefault(); 
+    e.preventDefault();
     setErro(null);
     setSucesso(null);
 
@@ -32,44 +33,59 @@ function NovaPublicacao() {
       return;
     }
 
-    if (!nomeProduto || !preco || !tipoProduto || !marcaProduto || !corProduto || !categoria || !notaProduto || !preco) {
+    if (
+      !nomeProduto ||
+      !preco ||
+      !tipoProduto ||
+      !marcaProduto ||
+      !corProduto ||
+      !categoria ||
+      !notaProduto ||
+      !preco
+    ) {
       setErro("Preencha todos os campos");
       return;
     }
 
     const produto = {
-        product_id: i,
-        product_name: nomeProduto,
-        type: tipoProduto,
-        brand: marcaProduto,
-        color: corProduto,
-        notes: notaProduto,
+      product_name: nomeProduto,
+      type: tipoProduto,
+      brand: marcaProduto,
+      color: corProduto,
+      notes: notaProduto,
     };
-    
-    i++;
 
     const hojeDate = new Date();
     const dia = String(hojeDate.getDate()).padStart(2, "0");
     const mes = String(hojeDate.getMonth() + 1).padStart(2, "0");
     const ano = hojeDate.getFullYear();
-    const hoje = `${dia}-${mes}-${ano}`;  
+    const hoje = `${dia}-${mes}-${ano}`;
 
     const publicacao = {
-      user_id: usuarioLogado.id,                        
+      user_id: usuarioLogado.id,
       post_id: null,
       date: hoje,
-      product: produto,                                 
+      product: produto,
       category: categoria ? Number(categoria) : null,
       price: Number(preco),
       has_promo: haDesconto,
-      discount: desconto ? Number(desconto) : 0,       
+      discount: desconto ? Number(desconto) : 0,
     };
 
+    console.log(publicacao);
     try {
-      const response = await axios.post(
-        "http://localhost:8080/products/publish",
-        publicacao
-      );
+      if (haDesconto) {
+        console.log("produto promocao");
+        response = await axios.post(
+          "http://localhost:8080/products/promo-pub",
+          publicacao
+        );
+      } else {
+        response = await axios.post(
+          "http://localhost:8080/products/publish",
+          publicacao
+        );
+      }
 
       console.log("Publicação criada:", response.data);
       setSucesso("Publicação cadastrada com sucesso!");
