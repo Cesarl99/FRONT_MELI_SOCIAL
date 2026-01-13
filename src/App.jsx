@@ -11,6 +11,7 @@ import ProdutosPromocao from "./pages/ProdutosPromocao";
 import QuantidadeSeguidoresVendedor from "./pages/QuantidadeSeguidoresVendedores";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import QuantidadePromocaoVendedor from "./pages/QuantidadePromocaoVendedor";
 
 function App() {
   return (
@@ -21,12 +22,19 @@ function App() {
       <main style={{ padding: "20px" }}>
         <Routes>
           <Route path="/seguir-vendedor" element={<SeguirVendedor />} />
-          <Route path="/quantidade-seguidores-vendedor" element={<QuantidadeSeguidoresVendedor />} />
+          <Route
+            path="/quantidade-seguidores-vendedor"
+            element={<QuantidadeSeguidoresVendedor />}
+          />
           <Route path="/quem-me-segue" element={<QuemMeSegue />} />
           <Route path="/quem-estou-seguindo" element={<QuemEstouSeguindo />} />
           <Route path="/deixar-de-seguir" element={<DeixarDeSeguir />} />
           <Route path="/nova-publicacao" element={<NovaPublicacao />} />
           <Route path="/publicacoes" element={<Publicacoes />} />
+          <Route
+            path="/quantidade-promocao-vendedor"
+            element={<QuantidadePromocaoVendedor />}
+          />
           <Route path="/produtos-promocao" element={<ProdutosPromocao />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
