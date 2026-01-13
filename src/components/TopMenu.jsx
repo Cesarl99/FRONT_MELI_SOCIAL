@@ -24,7 +24,7 @@ function TopMenu() {
     // Aqui você pode depois chamar o backend para buscar o nome pelo ID
     const usuario = {
       id: Number(idDigitado),
-      nome: `Usuario${idDigitado}`,  // provisório, até buscar do backend
+      nome: `Usuario${idDigitado}`, // provisório, até buscar do backend
     };
 
     localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
@@ -40,14 +40,37 @@ function TopMenu() {
   return (
     <header className="top-header">
       <ul className="top-menu-list">
-        <li><Link to="/seguir-vendedor">Seguir Vendedor</Link></li>
-        <li><Link to="/quantidade-seguidores-vendedor">Quantidade Seguidor Vendedor</Link></li>
-        <li><Link to="/quem-me-segue">Quem Me Segue?</Link></li>
-        <li><Link to="/quem-estou-seguindo">Quem Estou Seguindo?</Link></li>
-        <li><Link to="/deixar-de-seguir">Deixar de Seguir</Link></li>
-        <li><Link to="/nova-publicacao">Nova Publicação</Link></li>
-        <li><Link to="/publicacoes">Publicações</Link></li>
-        <li><Link to="/produtos-promocao">Produtos em Promoção</Link></li>
+        <li>
+          <Link to="/seguir-vendedor">Seguir Vendedor</Link>
+        </li>
+        <li>
+          <Link to="/quantidade-seguidores-vendedor">
+            Quantidade Seguidor Vendedor
+          </Link>
+        </li>
+        <li>
+          <Link to="/quem-me-segue">Quem Me Segue?</Link>
+        </li>
+        <li>
+          <Link to="/quem-estou-seguindo">Quem Estou Seguindo?</Link>
+        </li>
+        <li>
+          <Link to="/deixar-de-seguir">Deixar de Seguir</Link>
+        </li>
+        <li>
+          <Link to="/nova-publicacao">Nova Publicação</Link>
+        </li>
+        <li>
+          <Link to="/publicacoes">Publicações</Link>
+        </li>
+        <li>
+          <Link to="/quantidade-promocao-vendedor">
+            Quantidade Promoção (Vendedor)
+          </Link>
+        </li>
+        <li>
+          <Link to="/produtos-promocao">Produtos em Promoção</Link>
+        </li>
       </ul>
 
       <div className="bem-vindo-wrapper">
