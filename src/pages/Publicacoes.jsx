@@ -1,67 +1,75 @@
 // src/pages/Publicacoes.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 function Publicacoes() {
   const [dados, setDados] = useState(null);
   const [erro, setErro] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [ordenacao, setOrdenacao] = useState("novos");
+
+  const dadosUsuario = localStorage.getItem("usuarioLogado");
+  const usuarioLogado = dadosUsuario ? JSON.parse(dadosUsuario) : null;
+
+  async function buscarPublicacoes(ordenacaoAtual) {
+    try {
+      setErro(null);
+      setCarregando(true);
+
+      if (!usuarioLogado) {
+        setErro("Nenhum usuário logado. Informe o ID no topo da tela.");
+        return;
+      }
+
+      const userId = usuarioLogado.id;
+
+      let url;
+      if (ordenacaoAtual == "novos") {
+        url = `http://localhost:8080/products/followed/${userId}/list?order=date_desc`;
+      } else {
+        url = `http://localhost:8080/products/followed/${userId}/list?order=date_asc`;
+      }
+
+      console.log("Chamando URL:", url);
+
+      const response = await axios.get(url);
+      setDados(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar Publicacoes:", error);
+
+      if (error.response) {
+        const mensagemBackend =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : error.response.data?.message || "Erro ao buscar publicacoes.";
+
+        setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
+      } else if (error.request) {
+        setErro("Servidor não respondeu. Verifique se o backend está rodando.");
+      } else {
+        setErro("Erro ao preparar requisição. Veja o console.");
+      }
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   useEffect(() => {
-    const dadosUsuario = localStorage.getItem("usuarioLogado");
-    const usuarioLogado = dadosUsuario ? JSON.parse(dadosUsuario) : null;
-
-    if (!usuarioLogado) {
-      setErro("Nenhum usuário logado. Informe o ID no topo da tela.");
-      return;
-    }
-
-    async function buscarPublicacoes() {
-      try {
-        setErro(null);
-        setCarregando(true);
-
-        const userId = usuarioLogado.id;
-        console.log(userId);
-
-        const url = `http://localhost:8080/products/followed/${userId}/list`;
-        const response = await axios.get(url);
-
-        console.log(response.data);
-
-        setDados(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar Publicacoes:", error);
-
-        if (error.response) {
-          const mensagemBackend =
-            typeof error.response.data === "string"
-              ? error.response.data
-              : error.response.data?.message || "Erro ao buscar publicacoes.";
-
-          setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
-        } else if (error.request) {
-          setErro(
-            "Servidor não respondeu. Verifique se o backend está rodando."
-          );
-        } else {
-          setErro("Erro ao preparar requisição. Veja o console.");
-        }
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    buscarPublicacoes();
+    buscarPublicacoes(ordenacao);
   }, []);
+
+  function handleChangeOrdenacao(e) {
+    const novoValor = e.target.value;
+    setOrdenacao(novoValor);
+    buscarPublicacoes(novoValor);
+  }
 
   return (
     <div style={{ padding: 16, fontFamily: "Arial, sans-serif" }}>
       <h1>Publicacoes</h1>
 
       {erro && <p style={{ color: "red" }}>{erro}</p>}
-
       {carregando && <p>Carregando Publicacoes...</p>}
-
       {!carregando && !erro && !dados && <p>Nenhum dado carregado.</p>}
 
       {dados && !erro && (
@@ -75,6 +83,24 @@ function Publicacoes() {
               <strong>
                 {dados.publicacoes ? dados.publicacoes.length : 0}
               </strong>
+            </p>
+
+            <div style={{ marginTop: 8 }}>
+              <label>
+                Ordenar publicações:
+                <select
+                  value={ordenacao}
+                  onChange={handleChangeOrdenacao}
+                  style={{ marginLeft: 8 }}
+                >
+                  <option value="novos">Mais novos</option>
+                  <option value="antigos">Mais antigos</option>
+                </select>
+              </label>
+            </div>
+
+            <p style={{ marginTop: 8 }}>
+              Valor selecionado: <strong>{ordenacao}</strong>
             </p>
           </div>
 
@@ -145,4 +171,5 @@ function Publicacoes() {
     </div>
   );
 }
+
 export default Publicacoes;
