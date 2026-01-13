@@ -48,6 +48,7 @@ function NovaPublicacao() {
     }
 
     const produto = {
+      product_id: 0,
       product_name: nomeProduto,
       type: tipoProduto,
       brand: marcaProduto,
