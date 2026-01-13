@@ -1,13 +1,14 @@
 // src/components/TopMenu.jsx
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./TopMenu.css";
 
 function TopMenu() {
   const [usuarioLogado, setUsuarioLogado] = useState(null);
   const [idDigitado, setIdDigitado] = useState("");
+  const [erro, setErro] = useState(null);
 
-  // Ao carregar, tenta ler o usuário salvo
   useEffect(() => {
     const dados = localStorage.getItem("usuarioLogado");
     if (dados) {
@@ -15,21 +16,41 @@ function TopMenu() {
     }
   }, []);
 
-  function handleDefinirUsuario() {
-    if (!idDigitado) {
-      alert("Informe um ID de usuário.");
-      return;
+  async function handleDefinirUsuario() {
+    try {
+      setErro(null);
+      if (!idDigitado) {
+        setErro("Informe um ID de usuário.");
+        return;
+      }
+
+      const url = `http://localhost:8080/users/${idDigitado}`;
+      const response = await axios.get(url);
+
+      console.log(response);
+
+      const usuario = {
+        id: Number(idDigitado),
+        nome: response.data.user_name,
+      };
+
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+      setUsuarioLogado(usuario);
+      setIdDigitado("");
+    } catch (error) {
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Dados:", error.response.data);
+        console.error("Headers:", error.response.headers);
+        const mensagemBackend =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : error.response.data?.message ||
+              "Erro ao deixar de seguir usuário.";
+
+        setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
+      }
     }
-
-    // Aqui você pode depois chamar o backend para buscar o nome pelo ID
-    const usuario = {
-      id: Number(idDigitado),
-      nome: `Usuario${idDigitado}`, // provisório, até buscar do backend
-    };
-
-    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-    setUsuarioLogado(usuario);
-    setIdDigitado("");
   }
 
   function handleSair() {
@@ -77,9 +98,7 @@ function TopMenu() {
         {usuarioLogado ? (
           <>
             <span>Bem vindo,</span>
-            <span className="bem-vindo-nome">
-              {usuarioLogado.nome} (ID: {usuarioLogado.id})
-            </span>
+            <span className="bem-vindo-nome">{usuarioLogado.nome} </span>
             <button className="sair-btn" onClick={handleSair}>
               Sair
             </button>
@@ -100,6 +119,7 @@ function TopMenu() {
             </button>
           </>
         )}
+        {erro && <p style={{ color: "red" }}>{erro}</p>}
       </div>
     </header>
   );
