@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import CampoPrecoMoeda from "../components/CampoPrecoMoeda";
 function NovaPublicacao() {
   const navigate = useNavigate();
 
@@ -11,9 +12,9 @@ function NovaPublicacao() {
   const [corProduto, setCorProduto] = useState("");
   const [notaProduto, setNotaProduto] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [preco, setPreco] = useState("");
   const [haDesconto, setHaDesconto] = useState(false);
-  const [desconto, setDesconto] = useState("");
+  const [precoCentavosDesconto, setPrecoCentavosDesconto] = useState("");
+  const [precoCentavos, setPrecoCentavos] = useState(0);
 
   const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(null);
@@ -35,15 +36,21 @@ function NovaPublicacao() {
 
     if (
       !nomeProduto ||
-      !preco ||
+      !precoCentavos ||
       !tipoProduto ||
       !marcaProduto ||
       !corProduto ||
       !categoria ||
-      !notaProduto ||
-      !preco
+      !notaProduto
     ) {
       setErro("Preencha todos os campos");
+      return;
+    }
+
+    if (precoCentavosDesconto > precoCentavos) {
+      setErro(
+        "O valor do desconto não pode ser igual ou superior que o preço do produto"
+      );
       return;
     }
 
@@ -61,6 +68,8 @@ function NovaPublicacao() {
     const mes = String(hojeDate.getMonth() + 1).padStart(2, "0");
     const ano = hojeDate.getFullYear();
     const hoje = `${dia}-${mes}-${ano}`;
+    const precoNumero = precoCentavos / 100;
+    const precoDesconto = precoCentavosDesconto / 100;
 
     const publicacao = {
       user_id: usuarioLogado.id,
@@ -68,9 +77,9 @@ function NovaPublicacao() {
       date: hoje,
       product: produto,
       category: categoria ? Number(categoria) : null,
-      price: Number(preco),
+      price: precoNumero,
       has_promo: haDesconto,
-      discount: desconto ? Number(desconto) : 0,
+      discount: precoDesconto,
     };
 
     console.log(publicacao);
@@ -193,11 +202,9 @@ function NovaPublicacao() {
         <div style={{ marginBottom: "8px" }}>
           <label>
             Preço:
-            <input
-              type="number"
-              step="0.01"
-              value={preco}
-              onChange={(e) => setPreco(e.target.value)}
+            <CampoPrecoMoeda
+              value={precoCentavos}
+              onChange={setPrecoCentavos}
             />
           </label>
         </div>
@@ -216,11 +223,10 @@ function NovaPublicacao() {
         {haDesconto && (
           <div style={{ marginBottom: "8px" }}>
             <label>
-              Preço (C/ Desconto):
-              <input
-                type="number"
-                value={desconto}
-                onChange={(e) => setDesconto(e.target.value)}
+              Valor do Desconto (em Reais):
+              <CampoPrecoMoeda
+                value={precoCentavosDesconto}
+                onChange={setPrecoCentavosDesconto}
               />
             </label>
           </div>

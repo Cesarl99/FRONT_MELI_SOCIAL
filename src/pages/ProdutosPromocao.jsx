@@ -5,65 +5,68 @@ function ProdutoPromocao() {
   const [dados, setDados] = useState(null);
   const [erro, setErro] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [vendedorId, setVendedorId] = useState("");
 
-  useEffect(() => {
-    const dadosUsuario = localStorage.getItem("usuarioLogado");
-    const usuarioLogado = dadosUsuario ? JSON.parse(dadosUsuario) : null;
+  async function buscarPublicacoes() {
+    try {
+      setErro(null);
+      setCarregando(true);
 
-    if (!usuarioLogado) {
-      setErro("Nenhum usuário logado. Informe o ID no topo da tela.");
-      return;
-    }
-
-    async function buscarPublicacoes() {
-      try {
-        setErro(null);
-        setCarregando(true);
-
-        const userId = usuarioLogado.id;
-        console.log(userId);
-
-        const url = `http://localhost:8080/products/promo-pub/list?user_id=${userId}`;
-
-        const response = await axios.get(url);
-
-        console.log(response);
-
-        setDados(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar Publicacoes:", error);
-
-        if (error.response) {
-          const mensagemBackend =
-            typeof error.response.data === "string"
-              ? error.response.data
-              : error.response.data?.message || "Erro ao buscar publicacoes.";
-
-          setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
-        } else if (error.request) {
-          setErro(
-            "Servidor não respondeu. Verifique se o backend está rodando."
-          );
-        } else {
-          setErro("Erro ao preparar requisição. Veja o console.");
-        }
-      } finally {
-        setCarregando(false);
+      if (!vendedorId) {
+        setErro("Informe o ID do vendedor.");
+        return;
       }
-    }
 
-    buscarPublicacoes();
-  }, []);
+      const url = `http://localhost:8080/products/promo-pub/list?user_id=${vendedorId}`;
+
+      const response = await axios.get(url);
+
+      console.log(response);
+
+      setDados(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar Publicacoes:", error);
+
+      if (error.response) {
+        const mensagemBackend =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : error.response.data?.message || "Erro ao buscar publicacoes.";
+
+        setErro(`Erro ${error.response.status}: ${mensagemBackend}`);
+      } else if (error.request) {
+        setErro("Servidor não respondeu. Verifique se o backend está rodando.");
+      } else {
+        setErro("Erro ao preparar requisição. Veja o console.");
+      }
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   return (
     <div style={{ padding: 16, fontFamily: "Arial, sans-serif" }}>
-      <h1>Produtos em promoção</h1>
+      <h1>Pesquise um vendedor para consultar </h1>
+      <h1>produtos em promoção</h1>
+
+      <div style={{ marginBottom: "12px" }}>
+        <label>
+          ID do vendedor:
+          <input
+            type="number"
+            value={vendedorId}
+            onChange={(e) => setVendedorId(e.target.value)}
+            style={{ marginLeft: "8px", width: "100px" }}
+          />
+        </label>
+        <button onClick={buscarPublicacoes} style={{ marginLeft: "8px" }}>
+          Buscar
+        </button>
+      </div>
 
       {erro && <p style={{ color: "red" }}>{erro}</p>}
 
       {carregando && <p>Carregando Publicacoes...</p>}
-
-      {!carregando && !erro && !dados && <p>Nenhum dado carregado.</p>}
 
       {dados && !erro && (
         <>
@@ -107,7 +110,26 @@ function ProdutoPromocao() {
                     <br />
                     Categoria: {pub.category}
                     <br />
-                    Preço R${pub.price},00
+                    Preço:{" "}
+                    <s>
+                      {Number(pub.price).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </s>{" "}
+                    Preço C/ Desconto: {""}
+                    {(Number(pub.price) - Number(pub.discount)).toLocaleString(
+                      "pt-BR",
+                      {
+                        style: "currency",
+                        currency: "BRL",
+                      }
+                    )}{" "}
+                    Desconto{" "}
+                    {Number(pub.discount).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
                     <br />
                     <span
                       style={{
@@ -131,8 +153,6 @@ function ProdutoPromocao() {
                     Marca: {pub.product.brand}
                     <br />
                     Notas: {pub.product.notes}
-                    <br />
-                    Valor do desconto: {pub.discount}
                   </span>
                 </div>
               ))

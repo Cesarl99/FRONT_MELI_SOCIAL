@@ -66,7 +66,7 @@ function Publicacoes() {
 
   return (
     <div style={{ padding: 16, fontFamily: "Arial, sans-serif" }}>
-      <h1>Publicacoes</h1>
+      <h1>Publicações</h1>
 
       {erro && <p style={{ color: "red" }}>{erro}</p>}
       {carregando && <p>Carregando Publicacoes...</p>}
@@ -76,10 +76,7 @@ function Publicacoes() {
         <>
           <div style={{ marginBottom: 12 }}>
             <p>
-              usuario id: <strong>{dados.user_id}</strong>
-            </p>
-            <p>
-              Publicacoes:{" "}
+              Total de Publicacoes:{" "}
               <strong>
                 {dados.publicacoes ? dados.publicacoes.length : 0}
               </strong>
@@ -98,10 +95,6 @@ function Publicacoes() {
                 </select>
               </label>
             </div>
-
-            <p style={{ marginTop: 8 }}>
-              Valor selecionado: <strong>{ordenacao}</strong>
-            </p>
           </div>
 
           <div style={{ borderTop: "1px solid #ccc", marginTop: 8 }}>
@@ -127,6 +120,20 @@ function Publicacoes() {
                       }}
                     >
                       <strong>Publicação</strong>
+                      {pub.has_promo && (
+                        <span
+                          style={{
+                            backgroundColor: "#00a650",
+                            color: "white",
+                            padding: "2px 8px",
+                            borderRadius: "999px",
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Produto em promoção
+                        </span>
+                      )}
                     </span>
                     <br />
                     ID da Publicação: {pub.post_id}
@@ -135,7 +142,40 @@ function Publicacoes() {
                     <br />
                     Categoria: {pub.category}
                     <br />
-                    Preço R${pub.price},00
+                    {pub.has_promo && (
+                      <span>
+                        Preço:{" "}
+                        <s>
+                          {Number(pub.price).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </s>{" "}
+                        Preço C/ Desconto:{" "}
+                        {(
+                          Number(pub.price) - Number(pub.discount)
+                        ).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}{" "}
+                        Desconto:{" "}
+                        {Number(pub.discount).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            marginTop: 4,
+                            fontSize: 18,
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {/* se quiser escrever algo aqui, coloque o texto */}
+                        </span>
+                      </span>
+                    )}
+                    {!pub.has_promo && <span> Preço: {pub.price}</span>}
                     <br />
                     <span
                       style={{
@@ -159,6 +199,7 @@ function Publicacoes() {
                     Marca: {pub.product.brand}
                     <br />
                     Notas: {pub.product.notes}
+                    <br />
                   </span>
                 </div>
               ))
