@@ -135,7 +135,7 @@ function NovaPublicacao() {
       <form onSubmit={handleCriarPublicacao}>
         <div style={{ marginBottom: "8px" }}>
           <label>
-            Título Do produto:
+            Título Do Produto:
             <input
               type="text"
               value={nomeProduto}
@@ -146,7 +146,7 @@ function NovaPublicacao() {
 
         <div style={{ marginBottom: "8px" }}>
           <label>
-            Tipo Do produto:
+            Tipo Do Produto:
             <input
               type="text"
               value={tipoProduto}

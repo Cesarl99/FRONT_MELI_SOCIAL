@@ -108,6 +108,8 @@ function Publicacoes() {
                     padding: "8px 0",
                   }}
                 >
+                  {" "}
+                  x [ [ ]]{" "}
                   <span style={{ fontWeight: "normal" }}>
                     (Vendedor (ID): {pub.user_id})
                     <br />
@@ -170,9 +172,7 @@ function Publicacoes() {
                             fontSize: 18,
                             textTransform: "uppercase",
                           }}
-                        >
-                          {/* se quiser escrever algo aqui, coloque o texto */}
-                        </span>
+                        ></span>
                       </span>
                     )}
                     {!pub.has_promo && <span> Preço: {pub.price}</span>}
