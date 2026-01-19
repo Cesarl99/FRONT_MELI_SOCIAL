@@ -109,7 +109,6 @@ function Publicacoes() {
                   }}
                 >
                   {" "}
-                  x [ [ ]]{" "}
                   <span style={{ fontWeight: "normal" }}>
                     (Vendedor (ID): {pub.user_id})
                     <br />
